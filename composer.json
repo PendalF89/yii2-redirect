@@ -1,6 +1,6 @@
 {
   "name": "pendalf89/yii2-redirect",
-  "description": "git remote add origin git@github.com:",
+  "description": "Component for convenient URL redirects in Yii2.",
   "type": "yii2-extension",
   "keywords": ["yii2", "yii 2", "redirect"],
   "license": "MIT",
@@ -11,10 +11,8 @@
       "homepage": "https://zabolotskikh.com"
     }
   ],
-  "minimum-stability": "dev",
-  "prefer-stable" : true,
   "require": {
-    "yiisoft/yii2": "~2.0"
+    "yiisoft/yii2": "^2.0"
   },
   "autoload": {
     "psr-4": {

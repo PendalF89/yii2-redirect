@@ -35,8 +35,8 @@ use yii\db\Expression;
  *
  * ```
  * 'on beforeRequest' => function() {
- *   Yii::$app->redirect->run();
- *   },
+ *     Yii::$app->redirect->run();
+ * },
  * ```
  *
  * Finally, you can add new redirects to DB:
