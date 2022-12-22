@@ -113,11 +113,11 @@ class Redirect extends BaseObject
     }
 
     /**
-     * Checks and print for infinite redirects by existing target urls in source column.
+     * Checks for infinite redirects by existing target urls in source column.
      *
-     * @return void
+     * @return array target urls, that presented in source column
      */
-    public function checkForInfiniteRedirects()
+    public function getLoopUrls()
     {
         $result = [];
         foreach ((new Query())->select('target')->from($this->tableName)->each() as $item) {
@@ -125,12 +125,7 @@ class Redirect extends BaseObject
                 $result[] = $item['target'];
             }
         }
-        if ($result) {
-            echo 'The following target urls are presented in source column and will cause of infinitive redirect. '
-            . 'You must delete these urls from source column.' . PHP_EOL . implode(PHP_EOL, $result) . PHP_EOL;
-        } else {
-            echo 'Everthing is ok, no target urls in source column were found.' . PHP_EOL;
-        }
+        return $result;
     }
 
     /**
