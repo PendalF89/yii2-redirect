@@ -65,6 +65,12 @@ class Redirect extends BaseObject
     public $dbComponent = 'db';
 
     /**
+     * @var bool Ignore query part for requested URL.
+     * For requested URL https://example.com?123 "?123" will be omitted while searching source in Database.
+     */
+    public $ignoreQueryPart = true;
+
+    /**
      * Performing redirect
      *
      * @return void
@@ -113,11 +119,11 @@ class Redirect extends BaseObject
     }
 
     /**
-     * Checks and print for infinite redirects by existing target urls in source column.
+     * Checks for infinite redirects by existing target urls in source column.
      *
-     * @return void
+     * @return array target urls, that presented in source column
      */
-    public function checkForInfiniteRedirects()
+    public function getLoopUrls()
     {
         $result = [];
         foreach ((new Query())->select('target')->from($this->tableName)->each() as $item) {
@@ -125,12 +131,7 @@ class Redirect extends BaseObject
                 $result[] = $item['target'];
             }
         }
-        if ($result) {
-            echo 'The following target urls are presented in source column and will cause of infinitive redirect. '
-            . 'You must delete these urls from source column.' . PHP_EOL . implode(PHP_EOL, $result) . PHP_EOL;
-        } else {
-            echo 'Everthing is ok, no target urls in source column were found.' . PHP_EOL;
-        }
+        return $result;
     }
 
     /**
@@ -142,6 +143,10 @@ class Redirect extends BaseObject
      */
     protected function getTarget($source)
     {
+        if ($this->ignoreQueryPart && str_contains($source, '?')) {
+            $source = strstr($source, '?', true);
+        }
+
         return Yii::$app->{$this->dbComponent}
             ->createCommand("SELECT `target` FROM `$this->tableName` WHERE `source` = :source", [
                 'source' => $source
